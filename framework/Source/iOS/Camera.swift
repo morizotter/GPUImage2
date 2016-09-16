@@ -214,12 +214,12 @@ public class Camera: NSObject, ImageSource, AVCaptureVideoDataOutputSampleBuffer
         let currentTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
         
         CVPixelBufferLockBaseAddress(cameraFrame, CVPixelBufferLockFlags(rawValue:CVOptionFlags(0)))
+        // CUSTOMIZE(morizo)
+        self.delegate?.didCaptureBuffer(captureOutput, didOutputSampleBuffer: sampleBuffer, from: connection)
         sharedImageProcessingContext.runOperationAsynchronously{
             let cameraFramebuffer:Framebuffer
             
 //            self.delegate?.didCaptureBuffer(sampleBuffer)
-            // CUSTOMIZE(morizo)
-            self.delegate?.didCaptureBuffer(captureOutput, didOutputSampleBuffer: sampleBuffer, from: connection)
             if self.captureAsYUV {
                 let luminanceFramebuffer:Framebuffer
                 let chrominanceFramebuffer:Framebuffer
