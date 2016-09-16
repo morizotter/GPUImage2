@@ -82,7 +82,7 @@ public class Camera: NSObject, ImageSource, AVCaptureVideoDataOutputSampleBuffer
     
     // CUSTOMIZE(morizo)
     let faceQueue = DispatchQueue(label: "com.molabo.JJProto1.faceQueue", attributes: [])
-    var currentMetadata = [AnyObject]()
+    public var currentMetadata = [AnyObject]()
 
     let framesToIgnore = 5
     var numberOfFramesCaptured = 0
