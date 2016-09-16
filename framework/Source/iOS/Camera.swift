@@ -79,6 +79,10 @@ public class Camera: NSObject, ImageSource, AVCaptureVideoDataOutputSampleBuffer
     let frameRenderingSemaphore = DispatchSemaphore(value:1)
     let cameraProcessingQueue = DispatchQueue.global(priority:DispatchQueue.GlobalQueuePriority.default)
     let audioProcessingQueue = DispatchQueue.global(priority:DispatchQueue.GlobalQueuePriority.default)
+    
+    // CUSTOMIZE(morizo)
+    let faceQueue = DispatchQueue(label: "com.molabo.JJProto1.faceQueue", attributes: [])
+    var currentMetadata = [AnyObject]()
 
     let framesToIgnore = 5
     var numberOfFramesCaptured = 0
@@ -125,7 +129,7 @@ public class Camera: NSObject, ImageSource, AVCaptureVideoDataOutputSampleBuffer
         // Add the video frame output
         videoOutput = AVCaptureVideoDataOutput()
         videoOutput.alwaysDiscardsLateVideoFrames = false
-
+        
         if captureAsYUV {
             supportsFullYUVRange = false
             let supportedPixelFormats = videoOutput.availableVideoCVPixelFormatTypes
@@ -150,8 +154,10 @@ public class Camera: NSObject, ImageSource, AVCaptureVideoDataOutputSampleBuffer
         if (captureSession.canAddOutput(videoOutput)) {
             captureSession.addOutput(videoOutput)
         }
+        
         captureSession.sessionPreset = sessionPreset
         
+        // CUSTOMIZE(morizo) AVCaptureConnection
         var captureConnection: AVCaptureConnection!
         for connection in videoOutput.connections {
             for port in (connection as AnyObject).inputPorts {
@@ -164,9 +170,20 @@ public class Camera: NSObject, ImageSource, AVCaptureVideoDataOutputSampleBuffer
             captureConnection.videoOrientation = .portrait
         }
         
+        // CUSTOMIZE(morizo) AVMetadataOutput
+        let metaOutput = AVCaptureMetadataOutput()
+        if captureSession.canAddOutput(metaOutput) {
+            captureSession.addOutput(metaOutput)
+        }
+        
         captureSession.commitConfiguration()
 
         super.init()
+
+        // CUSTOMIZE(morizo) AVMetadataOutput
+        metaOutput.setMetadataObjectsDelegate(self, queue: faceQueue)
+        print(metaOutput.availableMetadataObjectTypes)
+        metaOutput.metadataObjectTypes = [AVMetadataObjectTypeFace]
         
         videoOutput.setSampleBufferDelegate(self, queue:cameraProcessingQueue)
     }
@@ -333,5 +350,13 @@ public class Camera: NSObject, ImageSource, AVCaptureVideoDataOutputSampleBuffer
     
     func processAudioSampleBuffer(_ sampleBuffer:CMSampleBuffer) {
         self.audioEncodingTarget?.processAudioBuffer(sampleBuffer)
+    }
+}
+
+// CUSTOMIZE(morizo) AVMetadataOutput
+// MARK: AVCaptureMetadataOutputObjectsDelegate
+extension Camera: AVCaptureMetadataOutputObjectsDelegate {
+    public func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
+        currentMetadata = metadataObjects as [AnyObject]
     }
 }
