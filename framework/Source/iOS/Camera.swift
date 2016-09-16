@@ -2,7 +2,9 @@ import Foundation
 import AVFoundation
 
 public protocol CameraDelegate {
-    func didCaptureBuffer(_ sampleBuffer: CMSampleBuffer)
+//    func didCaptureBuffer(_ sampleBuffer: CMSampleBuffer)
+    // CUSTOMIZE(morizo)
+    func didCaptureBuffer(_ captureOutput:AVCaptureOutput!, didOutputSampleBuffer sampleBuffer:CMSampleBuffer!, from connection:AVCaptureConnection!)
 }
 public enum PhysicalCameraLocation {
     case backFacing
@@ -81,7 +83,7 @@ public class Camera: NSObject, ImageSource, AVCaptureVideoDataOutputSampleBuffer
     let audioProcessingQueue = DispatchQueue.global(priority:DispatchQueue.GlobalQueuePriority.default)
     
     // CUSTOMIZE(morizo)
-    let faceQueue = DispatchQueue(label: "com.molabo.JJProto1.faceQueue", attributes: [])
+    let faceQueue = DispatchQueue(label: "com.molabo.JJ.faceQueue", attributes: [])
     public var currentMetadata = [AnyObject]()
 
     let framesToIgnore = 5
@@ -215,7 +217,9 @@ public class Camera: NSObject, ImageSource, AVCaptureVideoDataOutputSampleBuffer
         sharedImageProcessingContext.runOperationAsynchronously{
             let cameraFramebuffer:Framebuffer
             
-            self.delegate?.didCaptureBuffer(sampleBuffer)
+//            self.delegate?.didCaptureBuffer(sampleBuffer)
+            // CUSTOMIZE(morizo)
+            self.delegate?.didCaptureBuffer(captureOutput, didOutputSampleBuffer: sampleBuffer, from: connection)
             if self.captureAsYUV {
                 let luminanceFramebuffer:Framebuffer
                 let chrominanceFramebuffer:Framebuffer
