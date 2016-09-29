@@ -17,7 +17,7 @@
 
 import Foundation
 
-struct InputTextureProperties {
+public struct InputTextureProperties {
     let textureCoordinates:[GLfloat]
     let texture:GLuint
 }

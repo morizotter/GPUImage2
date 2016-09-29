@@ -108,7 +108,7 @@ public class Framebuffer {
         }
     }
     
-    func sizeForTargetOrientation(_ targetOrientation:ImageOrientation) -> GLSize {
+    public func sizeForTargetOrientation(_ targetOrientation:ImageOrientation) -> GLSize {
         if self.orientation.rotationNeededForOrientation(targetOrientation).flipsDimensions() {
             return GLSize(width:size.height, height:size.width)
         } else {
@@ -116,7 +116,7 @@ public class Framebuffer {
         }
     }
     
-    func aspectRatioForRotation(_ rotation:Rotation) -> Float {
+    public func aspectRatioForRotation(_ rotation:Rotation) -> Float {
         if rotation.flipsDimensions() {
             return Float(size.width) / Float(size.height)
         } else {
@@ -124,7 +124,7 @@ public class Framebuffer {
         }
     }
 
-    func texelSize(for rotation:Rotation) -> Size {
+    public func texelSize(for rotation:Rotation) -> Size {
         if rotation.flipsDimensions() {
             return Size(width:1.0 / Float(size.height), height:1.0 / Float(size.width))
         } else {
@@ -132,7 +132,7 @@ public class Framebuffer {
         }
     }
 
-    func initialStageTexelSize(for rotation:Rotation) -> Size {
+    public func initialStageTexelSize(for rotation:Rotation) -> Size {
         if rotation.flipsDimensions() {
             return Size(width:1.0 / Float(size.height), height:0.0)
         } else {
@@ -140,11 +140,11 @@ public class Framebuffer {
         }
     }
 
-    func texturePropertiesForOutputRotation(_ rotation:Rotation) -> InputTextureProperties {
+    public func texturePropertiesForOutputRotation(_ rotation:Rotation) -> InputTextureProperties {
         return InputTextureProperties(textureCoordinates:rotation.textureCoordinates(), texture:texture)
     }
 
-    func texturePropertiesForTargetOrientation(_ targetOrientation:ImageOrientation) -> InputTextureProperties {
+    public func texturePropertiesForTargetOrientation(_ targetOrientation:ImageOrientation) -> InputTextureProperties {
         return texturePropertiesForOutputRotation(self.orientation.rotationNeededForOrientation(targetOrientation))
     }
     
