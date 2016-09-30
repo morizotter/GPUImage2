@@ -20,6 +20,11 @@ import Foundation
 public struct InputTextureProperties {
     public let textureCoordinates:[GLfloat]
     public let texture:GLuint
+    
+    public init(textureCoordinates: [GLfloat], texture: GLuint) {
+        self.textureCoordinates = textureCoordinates
+        self.texture = texture
+    }
 }
 
 public struct GLSize {
