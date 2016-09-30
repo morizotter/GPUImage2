@@ -18,8 +18,8 @@
 import Foundation
 
 public struct InputTextureProperties {
-    let textureCoordinates:[GLfloat]
-    let texture:GLuint
+    public let textureCoordinates:[GLfloat]
+    public let texture:GLuint
 }
 
 public struct GLSize {
