@@ -123,7 +123,7 @@ open class BasicOperation: ImageProcessingOperation {
         }
     }
     
-    public func internalRenderFunction(_ inputFramebuffer:Framebuffer, textureProperties:[InputTextureProperties]) {
+    open func internalRenderFunction(_ inputFramebuffer:Framebuffer, textureProperties:[InputTextureProperties]) {
         renderQuadWithShader(shader, uniformSettings:uniformSettings, vertices:standardImageVertices, inputTextures:textureProperties)
         releaseIncomingFramebuffers()
     }
@@ -175,7 +175,7 @@ open class BasicOperation: ImageProcessingOperation {
         return inputTextureProperties
     }
     
-    public func configureFramebufferSpecificUniforms(_ inputFramebuffer:Framebuffer) {
+    open func configureFramebufferSpecificUniforms(_ inputFramebuffer:Framebuffer) {
         if usesAspectRatio {
             let outputRotation = overriddenOutputRotation ?? inputFramebuffer.orientation.rotationNeededForOrientation(.portrait)
             uniformSettings["aspectRatio"] = inputFramebuffer.aspectRatioForRotation(outputRotation)
