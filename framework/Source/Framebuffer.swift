@@ -49,7 +49,7 @@ public class Framebuffer {
     public let texture:GLuint
     let framebuffer:GLuint?
     let stencilBuffer:GLuint?
-    let size:GLSize
+    public let size:GLSize
     let internalFormat:Int32
     let format:Int32
     let type:Int32
