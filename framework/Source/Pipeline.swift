@@ -190,7 +190,7 @@ public class SourceContainer {
     }
 }
 
-public class ImageRelay: ImageProcessingOperation {
+open class ImageRelay: ImageProcessingOperation {
     public var newImageCallback:((Framebuffer) -> ())?
     
     public let sources = SourceContainer()

@@ -11,8 +11,8 @@ public enum PhysicalCameraLocation {
     // Documentation: "The front-facing camera would always deliver buffers in AVCaptureVideoOrientationLandscapeLeft and the back-facing camera would always deliver buffers in AVCaptureVideoOrientationLandscapeRight."
     func imageOrientation() -> ImageOrientation {
         switch self {
-            case .backFacing: return .landscapeRight
-            case .frontFacing: return .landscapeLeft
+            case .backFacing: return .portrait
+            case .frontFacing: return .portrait
         }
     }
     
@@ -40,7 +40,7 @@ struct CameraError: Error {
 
 let initialBenchmarkFramesToIgnore = 5
 
-public class Camera: NSObject, ImageSource, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
+open class Camera: NSObject, ImageSource, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
     public var location:PhysicalCameraLocation {
         didSet {
             // TODO: Swap the camera locations, framebuffers as needed
@@ -65,7 +65,7 @@ public class Camera: NSObject, ImageSource, AVCaptureVideoDataOutputSampleBuffer
     
     public let targets = TargetContainer()
     public var delegate: CameraDelegate?
-    let captureSession:AVCaptureSession
+    open let captureSession:AVCaptureSession
     let inputCamera:AVCaptureDevice!
     let videoInput:AVCaptureDeviceInput!
     let videoOutput:AVCaptureVideoDataOutput!
@@ -151,6 +151,19 @@ public class Camera: NSObject, ImageSource, AVCaptureVideoDataOutputSampleBuffer
             captureSession.addOutput(videoOutput)
         }
         captureSession.sessionPreset = sessionPreset
+        
+        var captureConnection: AVCaptureConnection!
+        for connection in videoOutput.connections {
+            for port in (connection as AnyObject).inputPorts {
+                if (port as AnyObject).mediaType == AVMediaTypeVideo {
+                    captureConnection = connection as? AVCaptureConnection
+                }
+            }
+        }
+        if captureConnection.isVideoOrientationSupported {
+            captureConnection.videoOrientation = .portrait
+        }
+        
         captureSession.commitConfiguration()
 
         super.init()
@@ -166,7 +179,7 @@ public class Camera: NSObject, ImageSource, AVCaptureVideoDataOutputSampleBuffer
         }
     }
     
-    public func captureOutput(_ captureOutput:AVCaptureOutput!, didOutputSampleBuffer sampleBuffer:CMSampleBuffer!, from connection:AVCaptureConnection!) {
+    open func captureOutput(_ captureOutput:AVCaptureOutput!, didOutputSampleBuffer sampleBuffer:CMSampleBuffer!, from connection:AVCaptureConnection!) {
         guard (captureOutput != audioOutput) else {
             self.processAudioSampleBuffer(sampleBuffer)
             return

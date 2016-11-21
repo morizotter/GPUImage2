@@ -6,7 +6,7 @@ public class MovieInput: ImageSource {
     
     let yuvConversionShader:ShaderProgram
     let asset:AVAsset
-    let assetReader:AVAssetReader
+    var assetReader:AVAssetReader
     let playAtActualSpeed:Bool
     let loop:Bool
     var videoEncodingIsFinished = false
@@ -38,7 +38,7 @@ public class MovieInput: ImageSource {
         let inputAsset = AVURLAsset(url:url, options:inputOptions)
         try self.init(asset:inputAsset, playAtActualSpeed:playAtActualSpeed, loop:loop)
     }
-
+    
     // MARK: -
     // MARK: Playback control
 
@@ -69,12 +69,26 @@ public class MovieInput: ImageSource {
                     
                     if (self.loop) {
                         // TODO: Restart movie processing
+                        self.restart()
                     } else {
                         self.endProcessing()
                     }
                 }
             })
         })
+    }
+    
+    // To make loop.
+    // This is trial code
+    func restart() {
+        self.assetReader = try! AVAssetReader(asset:self.asset)
+        
+        let outputSettings:[String:AnyObject] = [(kCVPixelBufferPixelFormatTypeKey as String):NSNumber(value:Int32(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange))]
+        let readerVideoTrackOutput = AVAssetReaderTrackOutput(track:self.asset.tracks(withMediaType: AVMediaTypeVideo)[0], outputSettings:outputSettings)
+        readerVideoTrackOutput.alwaysCopiesSampleData = false
+        assetReader.add(readerVideoTrackOutput)
+        
+        start()
     }
     
     public func cancel() {

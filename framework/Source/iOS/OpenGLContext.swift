@@ -5,14 +5,14 @@ import UIKit
 var imageProcessingShareGroup:EAGLSharegroup? = nil
 
 public class OpenGLContext: SerialDispatch {
-    lazy var framebufferCache:FramebufferCache = {
+    public lazy var framebufferCache:FramebufferCache = {
         return FramebufferCache(context:self)
     }()
     var shaderCache:[String:ShaderProgram] = [:]
     
     let context:EAGLContext
     
-    lazy var passthroughShader:ShaderProgram = {
+    public lazy var passthroughShader:ShaderProgram = {
         return crashOnShaderCompileFailure("OpenGLContext"){return try self.programForVertexShader(OneInputVertexShader, fragmentShader:PassthroughFragmentShader)}
     }()
 

@@ -337,25 +337,25 @@ let filterOperations: Array<FilterOperationInterface> = [
             return colorGenerator
         })
     ),
-    FilterOperation(
-        filter:{AverageLuminanceExtractor()},
-        listName:"Average luminosity",
-        titleName:"Average Luminosity",
-        sliderConfiguration:.disabled,
-        sliderUpdateCallback: nil,
-        filterOperationType:.custom(filterSetupFunction:{(camera, filter, outputView) in
-            let castFilter = filter as! AverageLuminanceExtractor
-            let colorGenerator = SolidColorGenerator(size:outputView.sizeInPixels)
-            
-            castFilter.extractedLuminanceCallback = {luminosity in
-                colorGenerator.renderColor(Color(red:luminosity, green:luminosity, blue:luminosity))
-            }
-            
-            camera --> castFilter
-            colorGenerator --> outputView
-            return colorGenerator
-        })
-    ),
+//    FilterOperation(
+//        filter:{AverageLuminanceExtractor()},
+//        listName:"Average luminosity",
+//        titleName:"Average Luminosity",
+//        sliderConfiguration:.disabled,
+//        sliderUpdateCallback: nil,
+//        filterOperationType:.custom(filterSetupFunction:{(camera, filter, outputView) in
+//            let castFilter = filter as! AverageLuminanceExtractor
+//            let colorGenerator = SolidColorGenerator(size:outputView.sizeInPixels)
+//            
+//            castFilter.extractedLuminanceCallback = {luminosity in
+//                colorGenerator.renderColor(Color(red:luminosity, green:luminosity, blue:luminosity))
+//            }
+//            
+//            camera --> castFilter
+//            colorGenerator --> outputView
+//            return colorGenerator
+//        })
+//    ),
     FilterOperation(
         filter:{LuminanceThreshold()},
         listName:"Luminance threshold",
@@ -376,16 +376,16 @@ let filterOperations: Array<FilterOperationInterface> = [
         },
         filterOperationType:.singleInput
     ),
-    FilterOperation(
-        filter:{AverageLuminanceThreshold()},
-        listName:"Average luminance threshold",
-        titleName:"Avg. Lum. Threshold",
-        sliderConfiguration:.enabled(minimumValue:0.0, maximumValue:2.0, initialValue:1.0),
-        sliderUpdateCallback: {(filter, sliderValue) in
-            filter.thresholdMultiplier = sliderValue
-        },
-        filterOperationType:.singleInput
-    ),
+//    FilterOperation(
+//        filter:{AverageLuminanceThreshold()},
+//        listName:"Average luminance threshold",
+//        titleName:"Avg. Lum. Threshold",
+//        sliderConfiguration:.enabled(minimumValue:0.0, maximumValue:2.0, initialValue:1.0),
+//        sliderUpdateCallback: {(filter, sliderValue) in
+//            filter.thresholdMultiplier = sliderValue
+//        },
+//        filterOperationType:.singleInput
+//    ),
     FilterOperation(
         filter:{Pixellate()},
         listName:"Pixellate",

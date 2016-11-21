@@ -1,8 +1,8 @@
-public class ImageGenerator: ImageSource {
+open class ImageGenerator: ImageSource {
     public var size:Size
 
     public let targets = TargetContainer()
-    var imageFramebuffer:Framebuffer!
+    public var imageFramebuffer:Framebuffer!
 
     public init(size:Size) {
         self.size = size
@@ -18,7 +18,7 @@ public class ImageGenerator: ImageSource {
         target.newFramebufferAvailable(imageFramebuffer, fromSourceIndex:atIndex)
     }
     
-    func notifyTargets() {
+    public func notifyTargets() {
         updateTargetsWithFramebuffer(imageFramebuffer)
     }
 }

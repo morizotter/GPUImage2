@@ -17,9 +17,14 @@
 
 import Foundation
 
-struct InputTextureProperties {
-    let textureCoordinates:[GLfloat]
-    let texture:GLuint
+public struct InputTextureProperties {
+    public let textureCoordinates:[GLfloat]
+    public let texture:GLuint
+    
+    public init(textureCoordinates: [GLfloat], texture: GLuint) {
+        self.textureCoordinates = textureCoordinates
+        self.texture = texture
+    }
 }
 
 public struct GLSize {
@@ -48,7 +53,7 @@ public let standardImageVertices:[GLfloat] = [-1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 
 public let verticallyInvertedImageVertices:[GLfloat] = [-1.0, 1.0, 1.0, 1.0, -1.0, -1.0, 1.0, -1.0]
 
 // "position" and "inputTextureCoordinate", "inputTextureCoordinate2" attribute naming follows the convention of the old GPUImage
-func renderQuadWithShader(_ shader:ShaderProgram, uniformSettings:ShaderUniformSettings? = nil, vertices:[GLfloat], inputTextures:[InputTextureProperties]) {
+public func renderQuadWithShader(_ shader:ShaderProgram, uniformSettings:ShaderUniformSettings? = nil, vertices:[GLfloat], inputTextures:[InputTextureProperties]) {
     sharedImageProcessingContext.makeCurrentContext()
     shader.use()
     uniformSettings?.restoreShaderSettings(shader)
@@ -82,7 +87,7 @@ public func clearFramebufferWithColor(_ color:Color) {
     glClear(GLenum(GL_COLOR_BUFFER_BIT))
 }
 
-func renderStencilMaskFromFramebuffer(_ framebuffer:Framebuffer) {
+public func renderStencilMaskFromFramebuffer(_ framebuffer:Framebuffer) {
     let inputTextureProperties = framebuffer.texturePropertiesForOutputRotation(.noRotation)
     glEnable(GLenum(GL_STENCIL_TEST))
     glClearStencil(0)
@@ -110,11 +115,11 @@ func renderStencilMaskFromFramebuffer(_ framebuffer:Framebuffer) {
 #endif
 }
 
-func disableStencil() {
+public func disableStencil() {
     glDisable(GLenum(GL_STENCIL_TEST))
 }
 
-func textureUnitForIndex(_ index:Int) -> GLenum {
+public func textureUnitForIndex(_ index:Int) -> GLenum {
     switch index {
         case 0: return GLenum(GL_TEXTURE0)
         case 1: return GLenum(GL_TEXTURE1)
@@ -129,7 +134,7 @@ func textureUnitForIndex(_ index:Int) -> GLenum {
     }
 }
 
-func generateTexture(minFilter:Int32, magFilter:Int32, wrapS:Int32, wrapT:Int32) -> GLuint {
+public func generateTexture(minFilter:Int32, magFilter:Int32, wrapS:Int32, wrapT:Int32) -> GLuint {
     var texture:GLuint = 0
     
     glActiveTexture(GLenum(GL_TEXTURE1))
@@ -145,7 +150,7 @@ func generateTexture(minFilter:Int32, magFilter:Int32, wrapS:Int32, wrapT:Int32)
     return texture
 }
 
-func generateFramebufferForTexture(_ texture:GLuint, width:GLint, height:GLint, internalFormat:Int32, format:Int32, type:Int32, stencil:Bool) throws -> (GLuint, GLuint?) {
+public func generateFramebufferForTexture(_ texture:GLuint, width:GLint, height:GLint, internalFormat:Int32, format:Int32, type:Int32, stencil:Bool) throws -> (GLuint, GLuint?) {
     var framebuffer:GLuint = 0
     glActiveTexture(GLenum(GL_TEXTURE1))
 
@@ -173,7 +178,7 @@ func generateFramebufferForTexture(_ texture:GLuint, width:GLint, height:GLint, 
     return (framebuffer, stencilBuffer)
 }
 
-func attachStencilBuffer(width:GLint, height:GLint) throws -> GLuint {
+public func attachStencilBuffer(width:GLint, height:GLint) throws -> GLuint {
     var stencilBuffer:GLuint = 0
     glGenRenderbuffers(1, &stencilBuffer);
     glBindRenderbuffer(GLenum(GL_RENDERBUFFER), stencilBuffer)
@@ -193,7 +198,7 @@ func attachStencilBuffer(width:GLint, height:GLint) throws -> GLuint {
     return stencilBuffer
 }
 
-extension String {
+public extension String {
     func withNonZeroSuffix(_ suffix:Int) -> String {
         if suffix == 0 {
             return self

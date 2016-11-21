@@ -46,10 +46,10 @@ public class Framebuffer {
     public var timingStyle:FramebufferTimingStyle = .stillImage
     public var orientation:ImageOrientation
 
-    let texture:GLuint
+    public let texture:GLuint
     let framebuffer:GLuint?
     let stencilBuffer:GLuint?
-    let size:GLSize
+    public let size:GLSize
     let internalFormat:Int32
     let format:Int32
     let type:Int32
@@ -108,7 +108,7 @@ public class Framebuffer {
         }
     }
     
-    func sizeForTargetOrientation(_ targetOrientation:ImageOrientation) -> GLSize {
+    public func sizeForTargetOrientation(_ targetOrientation:ImageOrientation) -> GLSize {
         if self.orientation.rotationNeededForOrientation(targetOrientation).flipsDimensions() {
             return GLSize(width:size.height, height:size.width)
         } else {
@@ -116,7 +116,7 @@ public class Framebuffer {
         }
     }
     
-    func aspectRatioForRotation(_ rotation:Rotation) -> Float {
+    public func aspectRatioForRotation(_ rotation:Rotation) -> Float {
         if rotation.flipsDimensions() {
             return Float(size.width) / Float(size.height)
         } else {
@@ -124,7 +124,7 @@ public class Framebuffer {
         }
     }
 
-    func texelSize(for rotation:Rotation) -> Size {
+    public func texelSize(for rotation:Rotation) -> Size {
         if rotation.flipsDimensions() {
             return Size(width:1.0 / Float(size.height), height:1.0 / Float(size.width))
         } else {
@@ -132,7 +132,7 @@ public class Framebuffer {
         }
     }
 
-    func initialStageTexelSize(for rotation:Rotation) -> Size {
+    public func initialStageTexelSize(for rotation:Rotation) -> Size {
         if rotation.flipsDimensions() {
             return Size(width:1.0 / Float(size.height), height:0.0)
         } else {
@@ -140,11 +140,11 @@ public class Framebuffer {
         }
     }
 
-    func texturePropertiesForOutputRotation(_ rotation:Rotation) -> InputTextureProperties {
+    public func texturePropertiesForOutputRotation(_ rotation:Rotation) -> InputTextureProperties {
         return InputTextureProperties(textureCoordinates:rotation.textureCoordinates(), texture:texture)
     }
 
-    func texturePropertiesForTargetOrientation(_ targetOrientation:ImageOrientation) -> InputTextureProperties {
+    public func texturePropertiesForTargetOrientation(_ targetOrientation:ImageOrientation) -> InputTextureProperties {
         return texturePropertiesForOutputRotation(self.orientation.rotationNeededForOrientation(targetOrientation))
     }
     
@@ -199,8 +199,8 @@ func hashForFramebufferWithProperties(orientation:ImageOrientation, size:GLSize,
 // MARK: -
 // MARK: Framebuffer-related extensions
 
-extension Rotation {
-    func textureCoordinates() -> [GLfloat] {
+public extension Rotation {
+    public func textureCoordinates() -> [GLfloat] {
         switch self {
             case .noRotation: return [0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0]
             case .rotateCounterclockwise: return [0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0]
@@ -213,7 +213,7 @@ extension Rotation {
         }
     }
     
-    func croppedTextureCoordinates(offsetFromOrigin:Position, cropSize:Size) -> [GLfloat] {
+    public func croppedTextureCoordinates(offsetFromOrigin:Position, cropSize:Size) -> [GLfloat] {
         let minX = GLfloat(offsetFromOrigin.x)
         let minY = GLfloat(offsetFromOrigin.y)
         let maxX = GLfloat(offsetFromOrigin.x) + GLfloat(cropSize.width)
